@@ -6,5 +6,4 @@ import { createProduct } from "../controllers/productController.js";
 const productRoute = express.Router();
 
 productRoute.post("/", upload.single("image"), createProduct);
-
 export default productRoute;
