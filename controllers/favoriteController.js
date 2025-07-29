@@ -1,7 +1,7 @@
 import Favorite from "../models/Favorite.js";
 import Item from "../models/Item.js";
 import catchAsync from "../utils/catchAsync.js";
-import AppError from "../utils/AppError.js";
+import { AppError } from "../utils/AppError.js";
 
 export const addFavorite = catchAsync(async (req, res, next) => {
   const { itemId } = req.body;
