@@ -4,8 +4,7 @@ import {
   getFavorites,
   removeFavorite,
 } from "../controllers/favoriteController.js";
-import { protect } from "../middleware/authMiddleware.js";
-
+import protect from "../middlewares/authMiddleware.js";
 const favoriteRoute = express.Router();
 
 favoriteRoute.use(protect);
