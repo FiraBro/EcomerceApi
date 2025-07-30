@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import AppError from "../utils/AppError.js";
+import { AppError } from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
-const protect = catchAsync(async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
@@ -21,4 +21,10 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-export default protect;
+export const admin = (req, res, next) => {
+  if (!req.user || req.user.role !== "admin") {
+    return next(new AppError("Access denied. Admins only.", 403));
+  }
+
+  next();
+};
