@@ -3,10 +3,9 @@ import {
   addToCart,
   removeFromCart,
   updateCart,
-  getCart
+  getCart,
 } from "../controllers/cartController.js";
-import protect from "../middlewares/protect.js"; // assumes authentication middleware
-
+import { protect } from "../middlewares/authMiddleware.js";
 const cartRoute = express.Router();
 
 // All cart routes are protected
@@ -16,6 +15,5 @@ cartRoute.post("/add", addToCart);
 cartRoute.delete("/remove", removeFromCart);
 cartRoute.patch("/update", updateCart);
 cartRoute.patch("/", getCart);
-
 
 export default cartRoute;
