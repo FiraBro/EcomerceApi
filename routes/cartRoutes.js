@@ -7,15 +7,15 @@ import {
 } from "../controllers/cartController.js";
 import protect from "../middlewares/protect.js"; // assumes authentication middleware
 
-const router = express.Router();
+const cartRoute = express.Router();
 
 // All cart routes are protected
-router.use(protect);
+cartRoute.use(protect);
 
-router.post("/add", addToCart);
-router.delete("/remove", removeFromCart);
-router.patch("/update", updateCart);
-router.patch("/", getCart);
+cartRoute.post("/add", addToCart);
+cartRoute.delete("/remove", removeFromCart);
+cartRoute.patch("/update", updateCart);
+cartRoute.patch("/", getCart);
 
 
-export default router;
+export default cartRoute;
