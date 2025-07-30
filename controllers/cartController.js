@@ -1,5 +1,5 @@
-import Cart from "../models/cartModel.js";
-import AppError from "../utils/AppError.js";
+import Cart from "../models/Cart.js";
+import { AppError } from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 // Add item to cart
@@ -98,14 +98,14 @@ export const updateCart = catchAsync(async (req, res, next) => {
 export const getCart = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
 
-  const cart = await Cart.findOne({ user: userId }).populate('items.product');
+  const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
   if (!cart) {
-    return next(new AppError('Cart is empty or not found', 404));
+    return next(new AppError("Cart is empty or not found", 404));
   }
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: cart,
   });
 });
