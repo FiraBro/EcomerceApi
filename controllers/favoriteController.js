@@ -1,5 +1,5 @@
 import Favorite from "../models/Favorite.js";
-import Item from "../models/Item.js";
+import Item from "../models/Product.js";
 import catchAsync from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 
