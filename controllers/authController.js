@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import sendToken from "../utils/sendToken.js";
-import AppError from "../utils/AppError.js";
+import { AppError } from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 // @desc    Register user
