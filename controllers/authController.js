@@ -6,7 +6,7 @@ import catchAsync from "../utils/catchAsync.js";
 
 // @desc    Register user
 export const registerUser = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   if (!name || !email || !password) {
     return next(new AppError("All fields are required", 400));
@@ -24,6 +24,7 @@ export const registerUser = catchAsync(async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
+    role,
   });
 
   sendToken(user, res, 200);
