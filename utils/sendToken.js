@@ -19,6 +19,7 @@ const sendToken = (user, res, statusCode = 200) => {
     _id: user._id,
     name: user.name,
     email: user.email,
+    role: user.role,
   });
 };
 
