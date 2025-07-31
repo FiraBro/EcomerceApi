@@ -1,6 +1,6 @@
 // routes/productRoutes.js
 import express from "express";
-import upload from "../middlewares/upload.js";
+import { uploadProductImage } from "../middlewares/upload.js";
 import {
   createProduct,
   searchProducts,
@@ -13,7 +13,7 @@ productRoute.post(
   "/add",
   protect,
   admin,
-  upload.single("image"),
+  uploadProductImage.single("image"),
   createProduct
 );
 productRoute.get("/search", searchProducts);
