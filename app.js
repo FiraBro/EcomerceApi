@@ -14,7 +14,7 @@ import authRouter from "./routes/authRoutes.js";
 import categoryRoute from "./routes/categoryRoutes.js";
 import favoriteRoute from "./routes/favoriteRoutes.js";
 import cartRoute from "./routes/cartRoutes.js";
-
+import heroRoute from "./routes/heroRoutes.js";
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,6 +37,7 @@ app.use("/api/v1/products", productRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use("/api/v1/favorites", favoriteRoute);
 app.use("/api/v1/cart", cartRoute);
+app.use("/api/v1/hero", heroRoute);
 
 // Error handling middleware
 app.use(errorConverter);
