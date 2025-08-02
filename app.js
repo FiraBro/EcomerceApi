@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import compression from "compression";
-import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 
 import connectDB from "./config/db.js";
