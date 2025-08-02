@@ -1,25 +1,28 @@
+// middlewares/rateLimiter.js
 import rateLimit from "express-rate-limit";
-import { AppError } from "../utils/AppError.js";
+import RedisStore from "rate-limit-redis";
+import Redis from "ioredis";
 
-const productionRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === "production" ? 100 : 1000, // Different limits for prod/dev
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  skipSuccessfulRequests: true, // Only count failed requests (status >= 400)
-  skip: (req) => req.ip === process.env.ADMIN_IP, // Skip rate limiting for admin IP
-  handler: (req, res, next) => {
-    next(
-      new AppError(
-        `Too many requests from this IP (${req.ip}), please try again in 15 minutes.`,
-        429
-      )
-    );
-  },
-  keyGenerator: (req) => {
-    // Rate limit by API key if available, otherwise by IP
-    return req.headers["x-api-key"] || req.ip;
-  },
+const redisClient = new Redis({
+  host: "127.0.0.1", // or your Redis server
+  port: 6379,
+  password: process.env.REDIS_PASSWORD || undefined,
+  enableOfflineQueue: false,
 });
 
-export default productionRateLimiter;
+const rateLimiter = rateLimit({
+  store: new RedisStore({
+    sendCommand: (...args) => redisClient.call(...args),
+    prefix: "rate_limit:",
+  }),
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false,
+});
+
+export default rateLimiter;
