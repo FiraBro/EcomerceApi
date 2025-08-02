@@ -1,28 +1,15 @@
 // middlewares/rateLimiter.js
-import rateLimit from "express-rate-limit";
-import RedisStore from "rate-limit-redis";
-import Redis from "ioredis";
+import rateLimit from 'express-rate-limit';
 
-const redisClient = new Redis({
-  host: "127.0.0.1", // or your Redis server
-  port: 6379,
-  password: process.env.REDIS_PASSWORD || undefined,
-  enableOfflineQueue: false,
-});
-
-const rateLimiter = rateLimit({
-  store: new RedisStore({
-    sendCommand: (...args) => redisClient.call(...args),
-    prefix: "rate_limit:",
-  }),
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+const apiRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // ⏳ 15 minutes
+  max: 100,                 // ✅ Limit each IP to 100 requests per window
+  standardHeaders: true,   // ✔️ Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false,    // ❌ Disable the `X-RateLimit-*` headers
   message: {
-    success: false,
-    message: "Too many requests. Please try again later.",
+    status: 429,
+    message: 'Too many requests, please try again later.',
   },
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false,
 });
 
-export default rateLimiter;
+export default apiRateLimiter;
