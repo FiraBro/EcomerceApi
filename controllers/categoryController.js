@@ -24,3 +24,13 @@ export const createCategory = catchAsync(async (req, res, next) => {
     category,
   });
 });
+
+export const getAllCategories = catchAsync(async (req, res, next) => {
+  const categories = await Category.find(); // get all categories
+
+  res.status(200).json({
+    status: "success",
+    results: categories.length,
+    categories,
+  });
+});
