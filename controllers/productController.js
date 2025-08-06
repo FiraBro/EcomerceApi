@@ -6,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import catchAsync from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
+import fs from "fs/promises";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -93,5 +94,39 @@ export const searchProducts = catchAsync(async (req, res, next) => {
     status: "success",
     results: products.length,
     products,
+  });
+});
+
+export const deleteProduct = catchAsync(async (req, res, next) => {
+  const { productId } = req.params;
+
+  // Optional: validate ObjectId
+  if (!productId.match(/^[0-9a-fA-F]{24}$/)) {
+    return next(new AppError("Invalid product ID", 400));
+  }
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    return next(new AppError("Product not found", 404));
+  }
+
+  // Delete image from local storage (optional and only if using local)
+  if (product.image) {
+    const filename = product.image.split("/").pop(); // e.g. 1754396400796_mobile.jpg
+    const filePath = path.join(__dirname, `../uploads/products/${filename}`);
+
+    try {
+      await fs.unlink(filePath); // Delete file
+    } catch (err) {
+      console.warn("Image file not found or already deleted:", filePath);
+    }
+  }
+
+  await product.deleteOne(); // Remove product from DB
+
+  res.status(200).json({
+    status: "success",
+    message: "Product deleted successfully",
   });
 });
