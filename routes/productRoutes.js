@@ -4,6 +4,7 @@ import { uploadProductImage } from "../middlewares/upload.js";
 import {
   createProduct,
   searchProducts,
+  deleteProduct,
 } from "../controllers/productController.js";
 import { protect, admin } from "../middlewares/authMiddleware.js";
 
@@ -17,4 +18,6 @@ productRoute.post(
   createProduct
 );
 productRoute.get("/search", searchProducts);
+productRoute.delete("/:productId", protect, admin, deleteProduct);
+
 export default productRoute;
