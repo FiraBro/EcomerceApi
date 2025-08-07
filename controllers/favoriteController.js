@@ -1,14 +1,13 @@
 import Favorite from "../models/Favorite.js";
-import Product from "../models/Product.js"; // Renamed from Item to Product for clarity
+import Product from "../models/Product.js"; // renamed from Item
 import catchAsync from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 
-// Add a product to favorites
 export const addFavorite = catchAsync(async (req, res, next) => {
-  const { productId } = req.body; // Changed from itemId to productId for clarity
+  const { productId } = req.body; // changed from itemId
   const userId = req.user.id;
 
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId); // changed from item
   if (!product) return next(new AppError("Product not found", 404));
 
   const exists = await Favorite.findOne({ user: userId, product: productId });
@@ -18,28 +17,23 @@ export const addFavorite = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: "success",
-    data: favorite,
+    data: { favorite },
   });
 });
 
-// Get all favorite products of a user
 export const getFavorites = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-
   const favorites = await Favorite.find({ user: userId }).populate("product");
 
   res.status(200).json({
     status: "success",
     results: favorites.length,
-    data: {
-      favorites,
-    },
+    data: { favorites },
   });
 });
 
-// Remove a product from favorites
 export const removeFavorite = catchAsync(async (req, res, next) => {
-  const { productId } = req.params; // Changed from itemId to productId
+  const { productId } = req.params;
   const userId = req.user.id;
 
   const favorite = await Favorite.findOneAndDelete({
