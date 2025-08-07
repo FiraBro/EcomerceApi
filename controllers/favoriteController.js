@@ -1,45 +1,52 @@
 import Favorite from "../models/Favorite.js";
-import Item from "../models/Product.js";
+import Product from "../models/Product.js"; // Renamed from Item to Product for clarity
 import catchAsync from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 
+// Add a product to favorites
 export const addFavorite = catchAsync(async (req, res, next) => {
-  const { itemId } = req.body;
+  const { productId } = req.body; // Changed from itemId to productId for clarity
   const userId = req.user.id;
 
-  const item = await Item.findById(itemId);
-  if (!item) return next(new AppError("Item not found", 404));
+  const product = await Product.findById(productId);
+  if (!product) return next(new AppError("Product not found", 404));
 
-  const exists = await Favorite.findOne({ user: userId, item: itemId });
-  if (exists) return next(new AppError("Item already in favorites", 400));
+  const exists = await Favorite.findOne({ user: userId, product: productId });
+  if (exists) return next(new AppError("Product already in favorites", 400));
 
-  const favorite = await Favorite.create({ user: userId, item: itemId });
+  const favorite = await Favorite.create({ user: userId, product: productId });
 
   res.status(201).json({
     status: "success",
-    data: { favorite },
+    data: favorite,
   });
 });
 
+// Get all favorite products of a user
 export const getFavorites = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const favorites = await Favorite.find({ user: userId }).populate("item");
+
+  const favorites = await Favorite.find({ user: userId }).populate("product");
 
   res.status(200).json({
     status: "success",
     results: favorites.length,
-    data: { favorites },
+    data: {
+      favorites,
+    },
   });
 });
 
+// Remove a product from favorites
 export const removeFavorite = catchAsync(async (req, res, next) => {
-  const { itemId } = req.params;
+  const { productId } = req.params; // Changed from itemId to productId
   const userId = req.user.id;
 
   const favorite = await Favorite.findOneAndDelete({
     user: userId,
-    item: itemId,
+    product: productId,
   });
+
   if (!favorite) return next(new AppError("Favorite not found", 404));
 
   res.status(200).json({
