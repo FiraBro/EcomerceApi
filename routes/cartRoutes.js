@@ -14,6 +14,6 @@ cartRoute.use(protect);
 cartRoute.post("/add", addToCart);
 cartRoute.delete("/remove", removeFromCart);
 cartRoute.patch("/update", updateCart);
-cartRoute.patch("/", getCart);
+cartRoute.get("/", getCart);
 
 export default cartRoute;
