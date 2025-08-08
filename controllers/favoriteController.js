@@ -33,12 +33,12 @@ export const getFavorites = catchAsync(async (req, res, next) => {
 });
 
 export const removeFavorite = catchAsync(async (req, res, next) => {
-  const { productId } = req.params;
+  const { itemId } = req.params; // or rename to favoriteId for clarity
   const userId = req.user.id;
 
   const favorite = await Favorite.findOneAndDelete({
+    _id: itemId,
     user: userId,
-    product: productId,
   });
 
   if (!favorite) return next(new AppError("Favorite not found", 404));
